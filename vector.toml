@@ -37,8 +37,8 @@ endpoint = "${INFLUXDB_ENDPOINT}"
 bucket = "${INFLUXDB_BUCKET}"
 org = "${INFLUXDB_ORG}"
 token = "${INFLUXDB_TOKEN}"
-consistency = "any"
-database = "vector-lc"
+#consistency = "any"
+#database = "vector-lc"
 measurement = "vector-lc-logs"
 
 [sinks.influxdb.tls]
