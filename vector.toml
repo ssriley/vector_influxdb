@@ -1,0 +1,46 @@
+[api]
+enabled = true
+address = "0.0.0.0:8686"
+
+#[sources.demo_logs]
+#type = "demo_logs"
+#interval = 1.0
+#format = "json"
+
+[sources.lc]
+type = "socket"
+address = "0.0.0.0:6514"
+max_length = 102_400
+mode = "tcp"
+
+[transforms.lctransform]
+type = "remap"
+inputs = ["lc"]
+source = """
+parsed, err = parse_syslog(.message)
+if err == null {
+  . |= parsed
+}
+. = parse_json!(string!(.message))
+"""
+
+[sinks.console]
+inputs = ["lctransform"]
+target = "stdout"
+type = "console"
+encoding.codec = "json"
+
+[sinks.influxdb]
+type = "influxdb_logs"
+inputs = ["lctransform"]
+endpoint = "${INFLUXDB_ENDPOINT}"
+bucket = "${INFLUXDB_BUCKET}"
+org = "${INFLUXDB_ORG}"
+token = "${INFLUXDB_TOKEN}"
+consistency = "any"
+database = "vector-lc"
+measurement = "vector-lc-logs"
+
+[sinks.influxdb.tls]
+verify_certificate = false
+
