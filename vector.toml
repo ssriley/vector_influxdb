@@ -40,6 +40,7 @@ token = "${INFLUXDB_TOKEN}"
 #consistency = "any"
 #database = "vector-lc"
 measurement = "vector-lc-logs"
+tags = [".routing.event_type", ".routing.hostname"]
 
 [sinks.influxdb.tls]
 verify_certificate = false
